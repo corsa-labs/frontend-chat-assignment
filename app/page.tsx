@@ -17,7 +17,6 @@ export default function Home() {
   const [currentSearch, setCurrentSearch] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
-  const [totalChats, setTotalChats] = useState(0);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
   const [selectedChat, setSelectedChat] = useState<IChat | null>(null);
 
@@ -32,7 +31,6 @@ export default function Home() {
       setChats((prev) => [...(!newSearch ? prev : []), ...response.chats]);
       if (newSearch) setCurrentPage(1);
       setTotalPages(response.meta.totalPages);
-      setTotalChats(response.meta.totalChats);
     },
     [currentPage, loading, currentSearch, handleGetChats]
   );
@@ -156,7 +154,7 @@ export default function Home() {
           {loading && !isSearching && (
             <div className="flex justify-center items-center h-[4.5625rem] gap-1.5 text-gray-500 shrink-0 text-sm font-medium">
               <Spinner />
-              Loading more chats...
+              Loading {!!chats.length && "more"} chats...
             </div>
           )}
         </div>
@@ -252,38 +250,4 @@ export default function Home() {
       </div>
     </div>
   );
-}
-
-{
-  /* <div className="flex justify-center items-center min-h-screen flex-col">
-      total chats: {totalChats} <br />
-      total pages: {totalPages} <br />
-      current page: {currentPage} <br />
-      current search: {currentSearch} <br />
-      <input
-        type="text"
-        value={currentSearch}
-        onChange={(e) => {
-          setCurrentSearch(e.target.value);
-          fetchChats(1, e.target.value);
-        }}
-      />
-      <button
-        disabled={loading || currentPage >= totalPages}
-        onClick={() => {
-          const newPage = currentPage + 1;
-          setCurrentPage(newPage);
-          fetchChats(newPage, currentSearch);
-        }}
-      >
-        {!loading ? "next" : "loading..."}
-      </button>
-      <div className="flex flex-col">
-        {chats.map((chat) => (
-          <div key={chat.id}>
-            {chat.id}-{chat.contactName}
-          </div>
-        ))}
-      </div>
-    </div> */
 }

@@ -41,7 +41,13 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  let filteredChats = chats;
+  let filteredChats = chats.sort((a, b) => {
+    return (
+      new Date(b.messages[b.messages.length - 1].timestamp).getTime() -
+      new Date(a.messages[a.messages.length - 1].timestamp).getTime()
+    );
+  });
+
   if (search.trim()) {
     filteredChats = filterChatsBySearch(chats, search.trim());
   }
@@ -54,13 +60,6 @@ export async function GET(request: NextRequest) {
   const paginatedChats = filteredChats.slice(startIndex, endIndex);
 
   const chatPreviews: IChatPreview[] = paginatedChats.map(mapChatToPreview);
-
-  chatPreviews.sort((a, b) => {
-    return (
-      new Date(b.lastMessageTimestamp).getTime() -
-      new Date(a.lastMessageTimestamp).getTime()
-    );
-  });
 
   const response: IChatsResponse = {
     chats: chatPreviews,

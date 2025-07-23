@@ -13,5 +13,7 @@ export async function GET(
     return NextResponse.json({ error: "Chat not found" }, { status: 404 });
   }
 
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   return NextResponse.json(chat);
 }
